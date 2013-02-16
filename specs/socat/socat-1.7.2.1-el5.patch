@@ -1,0 +1,10 @@
+--- xio-ip.c.patched	2011-12-06 08:45:03.000000000 +0100
++++ xio-ip.c	2013-02-16 01:02:19.790316259 +0100
+@@ -15,6 +15,7 @@
+ #include "xio-ip.h"
+ #include "xio-ip6.h"
+ 
++#include "linux/errqueue.h"
+ 
+ #if WITH_IP4 || WITH_IP6
+ 

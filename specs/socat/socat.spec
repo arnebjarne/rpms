@@ -5,16 +5,22 @@
 Summary: Relay for bidirectional data transfer between 2 channels
 Name: socat
 Version: 1.7.2.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPL
 Group: Applications/Internet
 URL: http://www.dest-unreach.org/socat/
 
+Packager: Dag Wieers <dag@wieers.com>
+Vendor: Dag Apt Repository, http://dag.wieers.com/apt/
+
 Source: http://www.dest-unreach.org/socat/download/socat-%{version}.tar.gz
+Patch0: socat-1.7.2.1-el5.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires: readline-devel, openssl-devel
+BuildRequires: tcp_wrappers
 Requires: tcp_wrappers
+%{?el6:BuildRequires: tcp_wrappers-devel}
 
 %description
 socat is a relay for bidirectional data transfer between two independent data
@@ -25,6 +31,7 @@ line editor, a program, or a combination of two of these.
 
 %prep
 %setup
+%{?el5:%patch0 -p0}
 
 %build
 %configure --disable-fips
@@ -47,6 +54,9 @@ line editor, a program, or a combination of two of these.
 %{_bindir}/socat
 
 %changelog
+* Sat Feb 16 2013 Bjarne Saltbaek <arnebjarne72@hotmail.com> 1.7.2.1-2
+- Patched for build on el5.
+
 * Fri Jun 08 2012 Dag Wieers <dag@wieers.com> - 1.7.2.1-1
 - Updated to release 1.7.2.1.
 
