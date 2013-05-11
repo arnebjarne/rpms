@@ -1,0 +1,346 @@
+=encoding utf8
+
+=head1 NAME
+
+unison - A file-synchronization tool for Unix and Windows
+
+=head1 SYNOPSIS
+
+ unison [options]
+ or unison root1 root2 [options]
+ or unison profilename [options]
+
+=head1 DESCRIPTION
+
+Unison is a file-synchronization tool for Unix and Windows. It allows two replicas of a collection of files and directories to be stored on different hosts (or different disks on the same host), modified separately, and then brought up to date by propagating the changes in each replica to the other.
+
+Unison shares a number of features with tools such as configuration management packages (CVS, PRCS, Subversion, BitKeeper, etc.), distributed filesystems (Coda, etc.), uni-directional mirroring utilities (rsync, etc.), and other synchronizers (Intellisync, Reconcile, etc). However, there are several points where it differs:
+
+=over 4
+
+=item *
+
+Unison runs on both Windows and many flavors of Unix (Solaris, Linux, OS X, etc.) systems. Moreover, Unison works across platforms, allowing you to synchronize a Windows laptop with a Unix server, for example.
+
+=item *
+
+Unlike simple mirroring or backup utilities, Unison can deal with updates to both replicas of a distributed directory structure. Updates that do not conflict are propagated automatically. Conflicting updates are detected and displayed.
+
+=item *
+
+Unlike a distributed filesystem, Unison is a user-level program: there is no need to modify the kernel or to have superuser privileges on either host.
+
+=item *
+
+Unison works between any pair of machines connected to the internet, communicating over either a direct socket link or tunneling over an encrypted ssh connection. It is careful with network bandwidth, and runs well over slow links such as PPP connections. Transfers of small updates to large files are optimized using a compression protocol similar to rsync.
+
+=item *
+
+Unison is resilient to failure. It is careful to leave the replicas and its own private structures in a sensible state at all times, even in case of abnormal termination or communication failures.
+
+=item *
+
+Unison has a clear and precise specification.
+
+=item *
+
+Unison is free; full source code is available under the GNU Public License.
+
+=back
+
+Options:
+
+ -auto
+         automatically accept default (nonconflicting) actions
+
+ -batch
+         batch mode: ask no questions at all
+
+ -doc xxx
+         show documentation ('-doc topics' lists topics)
+
+ -fat
+         use appropriate options for FAT filesystems
+
+ -group
+         synchronize group attributes
+
+ -ignore xxx
+         add a pattern to the ignore list
+
+ -ignorenot xxx
+         add a pattern to the ignorenot list
+
+ -nocreation xxx
+         prevent file creations on one replica
+
+ -nodeletion xxx
+         prevent file deletions on one replica
+
+ -noupdate xxx
+         prevent file updates and deletions on one replica
+
+ -owner
+         synchronize owner
+
+ -path xxx
+         path to synchronize
+
+ -perms n
+         part of the permissions which is synchronized
+
+ -root xxx
+         root of a replica (should be used exactly twice)
+
+ -silent
+         print nothing except error messages
+
+ -terse
+         suppress status messages
+
+ -testserver
+         exit immediately after the connection to the server
+
+ -times
+         synchronize modification times
+
+ -version
+         print version and exit
+
+Advanced options:
+
+ -addprefsto xxx
+         file to add new prefs to
+
+ -addversionno
+         add version number to name of unison on server
+
+ -backup xxx
+         add a pattern to the backup list
+
+ -backupcurr xxx
+         add a pattern to the backupcurr list
+
+ -backupcurrnot xxx
+         add a pattern to the backupcurrnot list
+
+ -backupdir xxx
+         directory for storing centralized backups
+
+ -backuploc xxx
+         where backups are stored ('local' or 'central')
+
+ -backupnot xxx
+         add a pattern to the backupnot list
+
+ -backupprefix xxx
+         prefix for the names of backup files
+
+ -backups
+         keep backup copies of all files (see also 'backup')
+
+ -backupsuffix xxx
+         a suffix to be added to names of backup files
+
+ -confirmbigdel
+         ask about whole-replica (or path) deletes (default true)
+
+ -confirmmerge
+         ask for confirmation before commiting results of a merge
+
+ -contactquietly
+         suppress the 'contacting server' message during startup
+
+ -copymax n
+         maximum number of simultaneous copyprog transfers
+
+ -copyprog xxx
+         external program for copying large files
+
+ -copyprogrest xxx
+         variant of copyprog for resuming partial transfers
+
+ -copyquoterem xxx
+         add quotes to remote file name for copyprog (true/false/default)
+
+ -copythreshold n
+         use copyprog on files bigger than this (if >=0, in Kb)
+
+ -debug xxx
+         debug module xxx ('all' -> everything, 'verbose' -> more)
+
+ -diff xxx
+         set command for showing differences between files
+
+ -dontchmod
+         when set, never use the chmod system call
+
+ -dumbtty
+         do not change terminal settings in text UI
+
+ -fastcheck xxx
+         do fast update detection (true/false/default)
+
+ -follow xxx
+         add a pattern to the follow list
+
+ -force xxx
+         force changes from this replica to the other
+
+ -forcepartial xxx
+         add a pattern to the forcepartial list
+
+ -halfduplex
+         force half-duplex communication with the server
+
+ -height n
+         height (in lines) of main window in graphical interface
+
+ -host xxx
+         bind the socket to this host name in server socket mode
+
+ -ignorearchives
+         ignore existing archive files
+
+ -ignorecase xxx
+         identify upper/lowercase filenames (true/false/default)
+
+ -ignoreinodenumbers
+         ignore inode number changes when detecting updates
+
+ -ignorelocks
+         ignore locks left over from previous run (dangerous!)
+
+ -immutable xxx
+         add a pattern to the immutable list
+
+ -immutablenot xxx
+         add a pattern to the immutablenot list
+
+ -key xxx
+         define a keyboard shortcut for this profile (in some UIs)
+
+ -killserver
+         kill server when done (even when using sockets)
+
+ -label xxx
+         provide a descriptive string label for this profile
+
+ -links xxx
+         allow the synchronization of symbolic links (true/false/default)
+
+ -log
+         record actions in logfile (default true)
+
+ -logfile xxx
+         logfile name
+
+ -maxbackups n
+         number of backed up versions of a file
+
+ -maxerrors n
+         maximum number of errors before a directory transfer is aborted
+
+ -maxthreads n
+         maximum number of simultaneous file transfers
+
+ -merge xxx
+         add a pattern to the merge list
+
+ -mountpoint xxx
+         abort if this path does not exist
+
+ -nocreationpartial xxx
+         add a pattern to the nocreationpartial list
+
+ -nodeletionpartial xxx
+         add a pattern to the nodeletionpartial list
+
+ -noupdatepartial xxx
+         add a pattern to the noupdatepartial list
+
+ -numericids
+         don't map uid/gid values by user/group names
+
+ -prefer xxx
+         choose this replica's version for conflicting changes
+
+ -preferpartial xxx
+         add a pattern to the preferpartial list
+
+ -repeat xxx
+         synchronize repeatedly (text interface only)
+
+ -retry n
+         re-try failed synchronizations N times (text ui only)
+
+ -rootalias xxx
+         register alias for canonical root names
+
+ -rsrc xxx
+         synchronize resource forks (true/false/default)
+
+ -rsync
+         activate the rsync transfer mode (default true)
+
+ -selftest
+         run internal tests and exit
+
+ -servercmd xxx
+         name of unison executable on remote server
+
+ -showarchive
+         show 'true names' (for rootalias) of roots and archive
+
+ -socket xxx
+         act as a server on a socket
+
+ -sortbysize
+         list changed files by size, not name
+
+ -sortfirst xxx
+         add a pattern to the sortfirst list
+
+ -sortlast xxx
+         add a pattern to the sortlast list
+
+ -sortnewfirst
+         list new before changed files
+
+ -sshargs xxx
+         other arguments (if any) for remote shell command
+
+ -sshcmd xxx
+         path to the ssh executable
+
+ -stream
+         use a streaming protocol for transferring file contents (default true)
+ -ui xxx
+         select UI ('text' or 'graphic'); command-line only
+
+ -unicode xxx
+         assume Unicode encoding in case insensitive mode
+
+ -xferbycopying
+         optimize transfers using local copies (default true)
+
+=head1 AUTHOR
+
+Written by Benjamin C. Pierce.
+
+=head1 REPORTING BUGS
+
+Report unison bugs to unison-users@groups.yahoo.com.
+
+=head1 COPYRIGHT
+
+Unison is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+Unison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+The GNU Public License can be found at L<http://www.gnu.org/licenses>. A copy is also included in the Unison source distribution in the file COPYING.
+
+=head1 SEE ALSO
+
+The full documentation is available at L<http://www.cis.upenn.edu/~bcpierce/unison/download/releases/stable/unison-manual.html>
+
