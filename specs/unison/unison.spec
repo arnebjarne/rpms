@@ -2,11 +2,11 @@
 # Authority: dag
 # Upstream: <unison-users$groups,yahoo,com>
 
-%define desktop_vendor rpmforge
+%define desktop_vendor repoforge
 
 Summary: File-synchronization tool
 Name: unison
-Version: 2.40.63
+Version: 2.40.102
 Release: 1%{?dist}
 License: GPLv3
 Group: Applications/File
@@ -14,6 +14,7 @@ URL: http://www.cis.upenn.edu/~bcpierce/unison/
 
 Source0: http://www.cis.upenn.edu/~bcpierce/unison/download/releases/stable/unison-%{version}.tar.gz
 Source1: unison.png
+Source2: unison.pod
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires: desktop-file-utils
@@ -22,6 +23,7 @@ BuildRequires: emacs
 BuildRequires: ocaml
 #BuildRequires: gtk2-devel
 #BuildRequires: lablgtk >= 2.4.0
+BuildRequires: perl
 
 %description
 Unison is a file-synchronization tool. It allows two replicas of a collection
@@ -47,6 +49,7 @@ EOF
 
 %build
 %{__make}
+pod2man -s 1 -r "unison %{version}" -c "Unison" %{SOURCE2} unison.1
 
 %install
 %{__rm} -rf %{buildroot}
@@ -67,6 +70,8 @@ desktop-file-install \
     --dir %{buildroot}%{_datadir}/applications \
     unison.desktop
 
+%{__install} -Dp -m 0644 unison.1 %{buildroot}%{_mandir}/man1/unison.1
+
 %clean
 %{__rm} -rf %{buildroot}
 
@@ -76,8 +81,12 @@ desktop-file-install \
 %{_bindir}/unison
 %{_datadir}/applications/%{desktop_vendor}-unison.desktop
 %{_datadir}/pixmaps/unison.png
+%{_mandir}/man1/unison.1*
 
 %changelog
+* Sat May 11 2013 Bjarne Saltbaek <arnebjarne72@hotmail.com> - 2.40.102-1
+- Updated to release 2.40.102.
+
 * Sun Aug 28 2011 Yury V. Zaytsev <yury@shurup.com> - 2.40.63-1
 - Using single-threaded make, smpflags are not handled correctly.
 - Updated to release 2.40.63.
