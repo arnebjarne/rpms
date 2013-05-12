@@ -1,62 +1,70 @@
-# $Id$
-# Authority: dag
-# Upstream: <scponly$lists,ccs,neu,edu>
-
-Summary: Limited shell for secure file transfers
+%define _hardened_build 1
+Summary: Restricted shell for ssh based file services
 Name: scponly
-Version: 4.6
-Release: 4%{?dist}
-License: GPL
-Group: System Environment/Shells
-URL: http://sublimation.org/scponly/wiki/
+Version: 4.8
+Release: 1%{?dist}
+License: BSD
+Group: Applications/Internet
+URL: http://sublimation.org/scponly/
+Source: http://downloads.sf.net/scponly/scponly-%{version}.tgz
+Patch0: scponly-install.patch
+Patch1: scponly-4.8-elif-gcc44.patch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n) 
 
-Source: http://sublimation.org/scponly/scponly-%{version}.tgz
-Patch0: scponly-4.6-rsync.patch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-
-Requires: openssh >= 3.4, openssh-server, openssh-clients, rsync
-BuildRequires: openssh >= 3.4, openssh-server, openssh-clients, rsync
+# Checks only for location of binaries
+BuildRequires: openssh-clients >= 3.4
+BuildRequires: openssh-server
+BuildRequires: rsync
 
 %description
-scponly is an alternative 'shell' for system administrators
-who would like to provide access to remote users to both
-read and write local files without providing any remote
-execution priviledges. Functionally, it is best described
-as a wrapper to the "tried and true" ssh suite of applications.
+scponly is an alternative 'shell' for system administrators 
+who would like to provide access to remote users to both 
+read and write local files without providing any remote 
+execution priviledges. Functionally, it is best described 
+as a wrapper to the "tried and true" ssh suite of applications. 
 
 %prep
-%setup
-%patch0 -p1 -b .rsync
-### FIXME: Remove ownership changes from Makefile
-%{__perl} -pi.orig -e 's|-o 0 -g 0||g' Makefile*
-### Change /usr/local from the docs to /usr.
-%{__perl} -pi -e 's|%{_prefix}/local/|%{_prefix}/|g' scponly.8* INSTALL README
+%setup -q
+%patch0 -p1
+%patch1 -p1
 
 %build
-%configure \
-    --enable-chrooted-binary \
-    --enable-rsync-compat \
-    --enable-scp-compat \
-    --enable-winscp-compat
-%{__make} %{?_smp_mflags} OPTS="%{optflags}"
+# config.guess in tarball lacks ppc64
+cp -p /usr/lib/rpm/config.{guess,sub} .
+%configure --enable-scp-compat --enable-winscp-compat --enable-chrooted-binary
+
+%{__make} %{?_smp_mflags} \
+	OPTS="%{optflags}"
+
+# Remove executable bit so the debuginfo does not hae executable source files
+chmod 0644 scponly.c scponly.h helper.c
 
 %install
 %{__rm} -rf %{buildroot}
-%{__make} install DESTDIR="%{buildroot}"
+
+# 
+sed -i "s|%{_prefix}/local/|%{_prefix}/|g" scponly.8* INSTALL README
+make install DESTDIR=%{buildroot}
 
 %clean
 %{__rm} -rf %{buildroot}
 
-%files
+%files 
+%defattr(0644, root, root, 0755)
+%doc AUTHOR CHANGELOG CONTRIB COPYING INSTALL README TODO BUILDING-JAILS.TXT
+%doc SECURITY
 %defattr(-, root, root, 0755)
-%doc AUTHOR BUILDING-JAILS.TXT CHANGELOG CONTRIB COPYING INSTALL README TODO
-%doc setup_chroot.sh build_extras/setup_chroot.sh*
 %doc %{_mandir}/man8/scponly.8*
-%config(noreplace) %{_sysconfdir}/scponly/
 %{_bindir}/scponly
 %{_sbindir}/scponlyc
+%dir %{_sysconfdir}/scponly/
+%config(noreplace) %{_sysconfdir}/scponly/*
 
 %changelog
+* Sun May 12 2013 Bjarne Saltbaek <arnebjarne72@hotmail.com> - 4.8-1
+- Updated to 4.8.
+- Grabbed from http://pkgs.fedoraproject.org/cgit/scponly.git
+
 * Sun May 27 2007 Dag Wieers <dag@wieers.com> - 4.6-4
 - Added chrooted binary.
 
@@ -77,4 +85,3 @@ as a wrapper to the "tried and true" ssh suite of applications.
 
 * Thu Mar 03 2005 Dag Wieers <dag@wwieers.com> - 4.0-1
 - Initial package. (using DAR)
-
