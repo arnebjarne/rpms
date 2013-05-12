@@ -6,7 +6,7 @@
 
 Name:		pnp4nagios
 Version:	0.6.21
-Release:	1
+Release:	1%{?dist}
 Summary:	PNP is not PerfParse. A Nagios/Icinga perfdata graphing solution
 
 Group:		Applications/System
