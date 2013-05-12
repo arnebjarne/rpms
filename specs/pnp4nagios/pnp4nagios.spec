@@ -5,8 +5,8 @@
 %define logmsg logger -t %{name}/rpm
 
 Name:		pnp4nagios
-Version:	0.6.19
-Release:	4
+Version:	0.6.21
+Release:	1
 Summary:	PNP is not PerfParse. A Nagios/Icinga perfdata graphing solution
 
 Group:		Applications/System
@@ -17,6 +17,7 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires:	rrdtool-devel
 BuildRequires:	perl-rrdtool
+BuildRequires:  perl(Time::HiRes)
 Requires:	rrdtool
 Requires:	perl-rrdtool
 
@@ -167,6 +168,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun May 12 2013 Bjarne Saltbaek <arnebjarne72@hotmail.com> - 0.6.21-1
+- Updated to 0.6.21.
+- Added missing Time::HiRes perl build requirement. 
+
 * Fri Feb 15 2013 Michael Friedrich <michael.friedrich@netways.de> - 0.6.19-4
 - if nagios is installed, use default config, otherwise fallback to icinga
 - only sed config in sysconfdir on fresh installs, upgrades are not-to-be overridden
